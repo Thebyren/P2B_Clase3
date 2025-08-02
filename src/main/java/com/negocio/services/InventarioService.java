@@ -21,12 +21,10 @@ public class InventarioService {
 
     // ERROR 8: Bucle infinito potencial
     public Producto buscarProductoPorId(int id) {
-        int i = 0;
-        while (i <= productos.size()) { // Debería ser < en lugar de <=
-            if (productos.get(i).id == id) {
-                return productos.get(i);
+        for (Producto producto : productos) {
+            if (producto.getId() == id) {
+                return producto;
             }
-            i++;
         }
         return null;
     }
@@ -35,8 +33,8 @@ public class InventarioService {
     public boolean venderProducto(int id, int cantidad) {
         Producto producto = buscarProductoPorId(id);
         if (producto != null && producto.hayStock(cantidad)) {
-            // No reduce el stock - ERROR LÓGICO
-            System.out.println("Venta realizada: " + producto.nombre);
+            producto.reducirStock(cantidad); // Reduce el stock
+            System.out.println("Venta realizada: " + producto.getNombre());
             return true;
         }
         return false;
@@ -46,7 +44,7 @@ public class InventarioService {
     public List<Producto> obtenerProductosDisponibles() {
         List<Producto> disponibles = new ArrayList<>();
         for (Producto producto : productos) {
-            if (producto.stock >= 0) { // Debería ser > 0
+            if (producto.getStock() > 0) {
                 disponibles.add(producto);
             }
         }

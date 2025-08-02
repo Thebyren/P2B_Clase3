@@ -20,7 +20,7 @@ public class PedidoService {
     // ERROR 11: Inicialización incorrecta de variables
     public Pedido crearPedido(Cliente cliente) {
         Pedido pedido = new Pedido(contadorPedidos, cliente);
-        contadorPedidos--; // Debería incrementar, no decrementar
+        contadorPedidos++; // Incrementa el contador para el siguiente pedido
         pedidos.add(pedido);
         return pedido;
     }
@@ -28,21 +28,26 @@ public class PedidoService {
     // ERROR 12: Condición mal formulada en bucle
     public boolean agregarProductoAPedido(int pedidoId, int productoId, int cantidad) {
         Pedido pedido = buscarPedidoPorId(pedidoId);
-        if (pedido == null) return false;
+        if (pedido == null) {
+            System.out.println("Error: Pedido no encontrado.");
+            return false;
+        }
 
         Producto producto = inventarioService.buscarProductoPorId(productoId);
-        if (producto == null) return false;
-
-        // Bucle innecesario con condición incorrecta
-        for (int i = 0; i != cantidad; i++) { // Debería ser < en lugar de !=
-            if (inventarioService.venderProducto(productoId, 1)) {
-                pedido.agregarProducto(producto);
-                //
-            } else {
-                return false;
-            }
+        if (producto == null) {
+            System.out.println("Error: Producto no encontrado.");
+            return false;
         }
-        return true;
+
+        // Vender el producto y actualizar el inventario
+        if (inventarioService.venderProducto(productoId, cantidad)) {
+            // Agregar el producto al pedido
+            pedido.agregarProducto(producto, cantidad);
+            return true;
+        } else {
+            System.out.println("Error: No hay suficiente stock para el producto: " + producto.getNombre());
+            return false;
+        }
     }
 
     private Pedido buscarPedidoPorId(int id) {

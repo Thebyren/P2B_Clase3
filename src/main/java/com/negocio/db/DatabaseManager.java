@@ -49,6 +49,18 @@ public class DatabaseManager {
                 )
             """);
 
+            // Crear tabla de unión pedido_productos
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS pedido_productos (
+                    pedido_id INTEGER,
+                    producto_id INTEGER,
+                    cantidad INTEGER,
+                    PRIMARY KEY (pedido_id, producto_id),
+                    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+                    FOREIGN KEY (producto_id) REFERENCES productos(id)
+                )
+            """);
+
         } catch (SQLException e) {
             System.err.println("Error al inicializar tablas: " + e.getMessage());
         }

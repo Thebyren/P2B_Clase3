@@ -2,27 +2,69 @@ package com.negocio.models;
 
 // ERROR 1: Atributos públicos (Mala práctica de encapsulamiento)
 public class Producto {
-    public int id;
-    public String nombre;
-    public double precio;
-    public int stock;
+    private int id;
+    private String nombre;
+    private double precio;
+    private int stock;
 
-    // ERROR 2: Constructor sin validaciones
     public Producto(int id, String nombre, double precio, int stock) {
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        }
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
-        this.stock = stock; // No valida si el stock es negativo
+        this.stock = stock;
     }
 
-    // ERROR 3: Método que permite stock negativo
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        }
+        this.stock = stock;
+    }
+
     public void reducirStock(int cantidad) {
-        this.stock = this.stock - cantidad; // No verifica si hay suficiente stock
+        if (cantidad <= 0) {
+             throw new IllegalArgumentException("La cantidad a reducir debe ser positiva.");
+        }
+        if (hayStock(cantidad)) {
+            this.stock -= cantidad;
+        } else {
+            throw new IllegalArgumentException("No hay suficiente stock para realizar la operación.");
+        }
     }
 
-    // ERROR 4: Método con lógica incorrecta
     public boolean hayStock(int cantidad) {
-        return stock > cantidad; // Debería ser >= para permitir exactamente la cantidad
+        return this.stock >= cantidad;
     }
 
     @Override

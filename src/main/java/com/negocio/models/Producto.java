@@ -1,5 +1,9 @@
 package com.negocio.models;
 
+import java.sql.PreparedStatement;
+
+import com.negocio.db.DatabaseManager;
+
 // ERROR 1: Atributos públicos (Mala práctica de encapsulamiento)
 public class Producto {
     private int id;
@@ -75,5 +79,18 @@ public class Producto {
                 ", precio=" + precio +
                 ", stock=" + stock +
                 '}';
+    }
+
+
+    public void save(){
+        DatabaseManager conn = new DatabaseManager();
+        String query = DatabaseManager.writeQuery(this);
+        try{
+            PreparedStatement statement = conn.getConnection().prepareStatement(query);
+            statement.executeUpdate();
+        }
+        catch(Exception e){
+            System.out.println("Error al guardar producto: " + e.getMessage());
+        }
     }
 }

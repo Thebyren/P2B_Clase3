@@ -1,7 +1,11 @@
 package com.negocio.models;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.Map;
+
+import com.negocio.db.DatabaseManager;
+
 import java.util.HashMap;
 
 public class Pedido {
@@ -23,16 +27,12 @@ public class Pedido {
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser positiva.");
         }
-
-
-        if (productos.containsKey(producto)) {
-            throw new IllegalArgumentException("No debe de haber productos con el mismo nombre.");
-        }
         this.productos.put(producto, this.productos.getOrDefault(producto, 0) + cantidad);
         calcularTotal();
     }
 
-    // ERROR 5: Cálculo incorrecto del total (suma precios sin considerar cantidades)
+    // ERROR 5: Cálculo incorrecto del total (suma precios sin considerar
+    // cantidades)
     private void calcularTotal() {
         total = 0;
         for (Map.Entry<Producto, Integer> entry : productos.entrySet()) {
@@ -58,11 +58,25 @@ public class Pedido {
     }
 
     // Getters
-    public int getId() { return id; }
-    public Cliente getCliente() { return cliente; }
-    public Map<Producto, Integer> getProductos() { return productos; }
-    public LocalDateTime getFecha() { return fecha; }
-    public double getTotal() { return total; }
+    public int getId() {
+        return id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public Map<Producto, Integer> getProductos() {
+        return productos;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public double getTotal() {
+        return total;
+    }
 
     @Override
     public String toString() {
@@ -73,5 +87,16 @@ public class Pedido {
                 ", fecha=" + fecha +
                 ", total=" + total +
                 '}';
+    }
+
+    public void save() {
+        DatabaseManager conn = new DatabaseManager();
+        String query = DatabaseManager.writeQuery(this);
+        try {
+            PreparedStatement statement = conn.getConnection().prepareStatement(query);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Error al guardar pedido: " + e.getMessage());
+        }
     }
 }

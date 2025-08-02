@@ -1,22 +1,24 @@
 package com.negocio.services;
 
+import com.negocio.db.DatabaseManager;
 import com.negocio.models.Cliente;
 import com.negocio.models.Pedido;
 import com.negocio.models.Producto;
+import com.negocio.models.DescuentoAplicable;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
-public class PedidoService {
+import java.sql.PreparedStatement;
+public class PedidoService implements DescuentoAplicable {
     private List<Pedido> pedidos;
     private InventarioService inventarioService;
     private int contadorPedidos;
-
+    private DatabaseManager connection;
     public PedidoService(InventarioService inventarioService) {
         this.pedidos = new ArrayList<>();
         this.inventarioService = inventarioService;
         this.contadorPedidos = 1;
+        this.connection = new DatabaseManager();
     }
 
     // ERROR 11: Inicialización incorrecta de variables
@@ -25,6 +27,13 @@ public class PedidoService {
         Pedido pedido = new Pedido(contadorPedidos, cliente);
         contadorPedidos++; // Incrementa el contador para el siguiente pedido
         pedidos.add(pedido);
+        String query = DatabaseManager.writeQuery(pedido);
+        try{
+            PreparedStatement statement = DatabaseManager.getConnection().prepareStatement(query);
+        }
+        catch(Exception e){
+            throw new RuntimeException("Error al guardar pedido: " + e.getMessage());
+        }
         return pedido;
     }
 

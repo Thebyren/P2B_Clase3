@@ -42,8 +42,9 @@ public class InventarioService {
 
     // ERROR 10: Código duplicado y condición mal formulada
     public List<Producto> obtenerProductosDisponibles() {
-        List<Producto> disponibles = obtenerTodosLosProductos();
-        for (Producto producto : disponibles) {
+        List<Producto> todos = obtenerTodosLosProductos();
+        List<Producto> disponibles = new ArrayList<>();
+        for (Producto producto : todos) {
             if (producto.getStock() > 0) {
                 disponibles.add(producto);
             }

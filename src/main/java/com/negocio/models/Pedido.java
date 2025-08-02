@@ -1,10 +1,7 @@
 package com.negocio.models;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDateTime;
 import java.util.Map;
-
-import com.negocio.db.DatabaseManager;
 
 import java.util.HashMap;
 
@@ -89,14 +86,5 @@ public class Pedido {
                 '}';
     }
 
-    public void save() {
-        DatabaseManager conn = new DatabaseManager();
-        String query = DatabaseManager.writeQuery(this);
-        try {
-            PreparedStatement statement = conn.getConnection().prepareStatement(query);
-            statement.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Error al guardar pedido: " + e.getMessage());
-        }
-    }
+
 }

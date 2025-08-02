@@ -82,14 +82,15 @@ public class Producto {
     }
 
 
-    public void save(){
-        DatabaseManager conn = new DatabaseManager();
-        String query = DatabaseManager.writeQuery(this);
-        try{
-            PreparedStatement statement = conn.getConnection().prepareStatement(query);
+    public void save() {
+        String query = "INSERT INTO productos (id, nombre, precio, stock) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = DatabaseManager.getConnection().prepareStatement(query)) {
+            statement.setInt(1, this.id);
+            statement.setString(2, this.nombre);
+            statement.setDouble(3, this.precio);
+            statement.setInt(4, this.stock);
             statement.executeUpdate();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error al guardar producto: " + e.getMessage());
         }
     }

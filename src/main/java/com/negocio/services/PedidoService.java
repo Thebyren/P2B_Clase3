@@ -27,11 +27,14 @@ public class PedidoService implements DescuentoAplicable {
         Pedido pedido = new Pedido(contadorPedidos, cliente);
         contadorPedidos++; // Incrementa el contador para el siguiente pedido
         pedidos.add(pedido);
-        String query = DatabaseManager.writeQuery(pedido);
-        try{
+        try {
+            String query = "INSERT INTO pedidos (id, cliente_id, total) VALUES (?, ?, ?)";
             PreparedStatement statement = DatabaseManager.getConnection().prepareStatement(query);
-        }
-        catch(Exception e){
+            statement.setInt(1, pedido.getId());
+            statement.setInt(2, pedido.getCliente().getId());
+            statement.setDouble(3, pedido.getTotal());
+            statement.executeUpdate();
+        } catch (Exception e) {
             throw new RuntimeException("Error al guardar pedido: " + e.getMessage());
         }
         return pedido;

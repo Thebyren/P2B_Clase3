@@ -23,7 +23,7 @@ public class DatabaseManager {
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS productos (
                     id INTEGER PRIMARY KEY,
-                    nombre TEXT NOT NULL,
+                    nombre TEXT NOT NULL UNIQUE,
                     precio REAL NOT NULL,
                     stock INTEGER NOT NULL
                 )
@@ -43,7 +43,7 @@ public class DatabaseManager {
                 CREATE TABLE IF NOT EXISTS pedidos (
                     id INTEGER PRIMARY KEY,
                     cliente_id INTEGER,
-                    fecha TEXT,
+                    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     total REAL,
                     FOREIGN KEY (cliente_id) REFERENCES clientes(id)
                 )

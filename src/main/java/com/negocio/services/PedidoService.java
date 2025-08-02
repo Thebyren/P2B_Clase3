@@ -3,9 +3,11 @@ package com.negocio.services;
 import com.negocio.models.Cliente;
 import com.negocio.models.Pedido;
 import com.negocio.models.Producto;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Date;
 public class PedidoService {
     private List<Pedido> pedidos;
     private InventarioService inventarioService;
@@ -19,6 +21,7 @@ public class PedidoService {
 
     // ERROR 11: Inicialización incorrecta de variables
     public Pedido crearPedido(Cliente cliente) {
+
         Pedido pedido = new Pedido(contadorPedidos, cliente);
         contadorPedidos++; // Incrementa el contador para el siguiente pedido
         pedidos.add(pedido);
@@ -48,6 +51,15 @@ public class PedidoService {
             System.out.println("Error: No hay suficiente stock para el producto: " + producto.getNombre());
             return false;
         }
+    }
+
+    public boolean aplicarDescuento(int pedidoId, double porcentaje) {
+        Pedido pedido = buscarPedidoPorId(pedidoId);
+        if (pedido != null) {
+            pedido.aplicarDescuento(porcentaje);
+            return true;
+        }
+        return false;
     }
 
     private Pedido buscarPedidoPorId(int id) {

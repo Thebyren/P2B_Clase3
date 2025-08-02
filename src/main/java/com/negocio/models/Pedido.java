@@ -1,8 +1,6 @@
 package com.negocio.models;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -24,6 +22,11 @@ public class Pedido {
     public void agregarProducto(Producto producto, int cantidad) {
         if (cantidad <= 0) {
             throw new IllegalArgumentException("La cantidad debe ser positiva.");
+        }
+
+
+        if (productos.containsKey(producto)) {
+            throw new IllegalArgumentException("No debe de haber productos con el mismo nombre.");
         }
         this.productos.put(producto, this.productos.getOrDefault(producto, 0) + cantidad);
         calcularTotal();
